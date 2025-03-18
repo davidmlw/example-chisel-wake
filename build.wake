@@ -1,39 +1,18 @@
+package example_chisel
+from wake import _
+from scala import _
+from util import _
 
-global def exampleChiselWake =
-  makeScalaModuleFromJSON here "example-chisel-wake"
+global def exampleChiselScalaModule Unit =
+  makeChiselModule "example-chisel" here
 
-global def testExampleChiselWake =
-  makeScalaModuleFromJSON here "test-example-chisel-wake"
-  | setScalaModuleDeps (exampleChiselWake, Nil)
-  | setScalaModuleSourceDirs ("src/test/scala", Nil)
-  | setScalaModuleResourceDirs ("src/test/resources", Nil)
+publish scalaModules = exampleChiselScalaModule, Nil
+## global def runTest tester =
+##   def report = "test.report.txt"
+##   runJava testExampleChiselWake.scalaModuleClasspath "org.scalatest.tools.Runner" ("-f", report, "-s", tester, Nil) Nil
+##   | reportScalaTest report
 
-def reportScalaTest report job =
-  def printReport paths =
-    def reports = paths | filter (_.getPathName ==~ report)
-    match reports
-      report, Nil =
-        def res = read report
-        def _ = rmap println res
-        Pass "Success!"
-      # Nil suggests that ScalaTest didn't run
-      Nil = match paths
-        bad, Nil if bad.getPathError.isSome =
-          match bad.getPathError
-            Some err = Fail err
-            None     = job.getJobStderr
-        x = Fail "Something has gone horribly wrong".makeError
-      x           = Fail "Ran Scala Test expected exactly 1 report, got {format x}".makeError
 
-  match job.getJobOutputs
-    Nil = job.getJobStderr
-    output, Nil if output.getPathError.isSome =
-      printReport job.getJobFailedOutputs
-      | rmapPass (\_ Fail "ScalaTest failed!".makeError)
-    one, Nil = panic "bad"
-    outputs = printReport outputs
-
-global def runTest tester =
-  def report = "test.report.txt"
-  runJava testExampleChiselWake.scalaModuleClasspath "org.scalatest.tools.Runner" ("-f", report, "-s", tester, Nil) Nil
-  | reportScalaTest report
+export def runMain3 _args =
+  makeScalaPlan "runMain" (exampleChiselScalaModule Unit) "example.reflection" Nil
+  | runScalaJob
