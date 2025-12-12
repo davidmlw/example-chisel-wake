@@ -5,6 +5,7 @@ from util import _
 
 global def exampleChiselScalaModule Unit =
   makeChiselModule "example-chisel" here
+  | editScalaModuleScalacOptions ("-g:source", _)
 
 publish scalaModules = exampleChiselScalaModule, Nil
 ## global def runTest tester =

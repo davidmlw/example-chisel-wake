@@ -1,13 +1,21 @@
-
 lazy val commonSettings = Seq(
-  scalaVersion := "2.12.4",
-  scalaVersion in ThisBuild := "2.12.4",
-  scalacOptions ++= Seq("-Xsource:2.11"),
-  scalacOptions ++= Seq("-unchecked", "-deprecation"),
-  libraryDependencies += "edu.berkeley.cs" % "chisel3_2.12"          %  "3.1.7",
-  libraryDependencies += "edu.berkeley.cs" % "chisel-iotesters_2.12" %  "1.2.9",
+  scalaVersion := "2.13.16",
+  scalacOptions ++= Seq(
+    "-unchecked", 
+    "-deprecation", 
+    "-g:source",
+    "-g:vars",
+    "-g:line",
+    "-Yrangepos"
+  ),
+  libraryDependencies ++= Seq(
+    "org.chipsalliance" % "chisel_2.13" % "6.7.0",
+    "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+    "org.scala-lang" % "scala-compiler" % scalaVersion.value,
+    "org.scala-lang.modules" %% "scala-parser-combinators" % "2.3.0"
+  ),
   updateOptions := updateOptions.value.withLatestSnapshots(false),
-  addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+  addCompilerPlugin("org.chipsalliance" % "chisel-plugin" % "6.7.0" cross CrossVersion.full)
   //libraryDependencies += "edu.berkeley.cs" % "rocketchip"       %  "latest.integration"
 )
 
