@@ -3,7 +3,7 @@ from wake import _
 from scala import _
 from util import _
 
-global def exampleChiselScalaModule Unit =
+global def exampleChiselScalaModule =
   makeChiselModule "example-chisel" here
   | editScalaModuleScalacOptions ("-g:source", _)
 
@@ -15,5 +15,5 @@ publish scalaModules = exampleChiselScalaModule, Nil
 
 
 export def runMain3 _args =
-  makeScalaPlan "runMain" (exampleChiselScalaModule Unit) "example.reflection" Nil
+  makeScalaPlan "runMain" exampleChiselScalaModule "example.reflection" Nil
   | runScalaJob
